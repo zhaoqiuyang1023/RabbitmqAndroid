@@ -116,7 +116,6 @@ public class MainActivity extends AppCompatActivity {
                                 } else {
                                     user2.setText(message);
                                 }
-
                             }
                         });
                         System.out.println(" [x] Received '" + message + "'");
