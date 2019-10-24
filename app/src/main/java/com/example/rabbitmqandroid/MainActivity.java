@@ -31,20 +31,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Button button = findViewById(R.id.send);
         Button quanfa=findViewById(R.id.qunfa);
-        quanfa.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        fun("all");
-                    }
-                }).start();
-            }
-        });
         editText = findViewById(R.id.edit_user);
         user1 = findViewById(R.id.user1);
         user2 = findViewById(R.id.user2);
+
         //模拟两个用户监听
         new Thread(new Runnable() {
             @Override
@@ -52,24 +42,31 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("12", "user1,user2开始监听");
                 react("user2");
                 react("user1");
-
             }
         }).start();
-
-        button.setOnClickListener(new View.OnClickListener() {
+        //群发
+        quanfa.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-
-                        fun(editText.getText().toString());
-                        //   react();
+                        send("all");
                     }
                 }).start();
+            }
+        });
 
-
+        //个推
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        send(editText.getText().toString());
+                    }
+                }).start();
             }
         });
     }
@@ -129,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void fun(String userId) {
+    private void send(String userId) {
         try {
             Log.i("用户",userId);
             // 获取到连接以及mq通道
@@ -142,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
 
             // 消息内容
             String message;
-            for (int i = 0; i < 100000000; i++) {
+            for (int i = 0; i < 1000; i++) {
                 message = "" + i;
                 channel.basicPublish(EXCHANGE_NAME, userId, null, message.getBytes());
                 System.out.println(" [x] Sent '" + message + "'");
